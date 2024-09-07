@@ -10,10 +10,12 @@ def update_all_tables(api, _overwrite=True):
 
 
 class FantasyApi():
-    def __init__(self, db_conn):
-        # self.db = db
-        # self.conn = fantasy_db.create_connection(db)
-        self.db_conn = db_conn
+    def __init__(self, auth):
+        # Find database provided by auth
+        auth = {'key': 'True'}
+        db = 'sample.db'
+        if auth['key'] == 'True':
+            self.db_conn = fantasy_db.create_connection(db)
 
     def update_tables(self, table_entries_dict, _overwrite=False):
         '''
@@ -84,7 +86,7 @@ class FantasyApi():
         # print(f'{table_name} table has been created.')
         pass
 
-    def delete_table(self, table_name):
+    def _delete_table(self, table_name):
         if fantasy_db.table_exists(self.db_conn, table_name):
             fantasy_db.delete_table(self.db_conn, table_name)
 

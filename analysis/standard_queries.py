@@ -47,6 +47,25 @@ def get_roster_week_df(conn, eval_year):
     roster_week_df = pd.read_sql_query("SELECT * FROM roster_week WHERE year = ?", conn, params=(eval_year,))
     return roster_week_df
 
+def get_all_time_roster_week_df(conn, start_year):
+    roster_week_df = pd.read_sql_query("SELECT * FROM roster_week WHERE year >= ?", conn, params=(start_year,))
+    return roster_week_df
+
+def all_time_points_scored_by_roster_week(conn, start_year, ascending=False):
+    final_week = 14
+    current_week = 5
+    df = pd.read_sql_query('''SELECT rw.points, rw.roster_id, rw.week_id, rw.year, rw.matchup_id, r.owner_id, u.user_id, 
+                                          u.display_name FROM roster_week rw 
+                                          LEFT JOIN roster r ON r.roster_id = rw.roster_id AND r.year = rw.year
+                                          LEFT JOIN user u ON u.user_id = r.owner_id AND u.year = rw.year
+                                          WHERE rw.year >= ?''', conn, params=(start_year,))
+
+    filtered_df = df[~((df['year'] == 2023) & (df['week_id'] > current_week))]
+    filtered_df = filtered_df[~(filtered_df['matchup_id'].isna())]
+    filtered_df = filtered_df.sort_values(by='points', ascending=ascending)
+
+    return filtered_df
+
 def get_luck_factor_df(conn, eval_week, eval_year):
     roster_week_df = get_roster_week_df(conn, eval_year)
     roster_df = get_roster_df(conn, eval_year)

@@ -24,6 +24,6 @@ def run_sleeper_etl(db_conn, api_params, year, include_player_data=True):
 
     t0 = time.time()
     api = load.FantasyApi(db_conn)
-    api.update_tables(table_entries_dict, _overwrite=True)
+    api.update_tables(table_entries_dict, _overwrite=False)
     t1 = time.time()
     print(t1 - t0, " seconds to extract load data.")

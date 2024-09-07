@@ -58,7 +58,7 @@ def luck_factor_plot(luck_factor_df, week):
     plt.xticks(rotation=40, ha='right')
     ax.set_ylim([ylim[0], ylim[1]])
     ax.legend()
-    ax.text(xlim[1] / 2 - 2, ylim[1] * 4 / 5 + .65, 'Schedule Wins (Expected Wins - Actual Wins)')
+    ax.text(xlim[1] / 2 - 4, ylim[1] * 4 / 5 + .65, 'Schedule Wins (Expected Wins - Actual Wins)')
 
     autolabel(ax, rects1, luck_factor_df)
     autolabel(ax, rects2, luck_factor_df)
@@ -126,7 +126,8 @@ def roster_week_points_plot(roster_week_points_df, week):
 
     # axin = ax.inset_axes([60, 40, 60+2*(120-105), ylim[0]+2*(120-105)], transform=ax.transData)  # create new inset axes in data coordinates
     king_team = 9 #TODO: Dynamically assign
-    king_points = 156.5 #TODO: Dynamically assign
+    king_points = roster_week_points_df['points'].max() #TODO: Dynamically assign
+    king_team = int(roster_week_points_df[roster_week_points_df['points'] == king_points]['roster_id'].iloc[0])
     # king_points = float(roster_week_points_df['points'].max())
     extent = [king_team*20-2, king_team*20+2, king_points+1, king_points+6]
     ax.imshow(background_image, extent=extent)
