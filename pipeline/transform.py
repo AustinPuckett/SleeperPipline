@@ -413,6 +413,7 @@ def transform_many(table_names, json_dict, year):
     :param table_names:
     :return table_entries_list: Each element is a list of rows. Each row can be entered into a database table.
 
+    TODO: Improve functionality by eliminating the need for a table_to_endpoint_map.
     '''
 
     table_to_endpoint_map = {'league': {'endpoint': 'league', 'transform_func': transform_league, 'weekly': False},
