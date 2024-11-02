@@ -1,13 +1,6 @@
 import pipeline.fantasy_db as fantasy_db
 import pipeline.transform as transform
 import pipeline.extract as extract
-import time
-
-def update_all_tables(api, _overwrite=True):
-    table_names = ['league', 'roster', 'rostered_player', 'user', 'nfl_state', 'draft_info', 'draft_order',
-                   'draft_pick', 'league_transaction', 'roster_week', 'player_week', 'player']
-
-    api.update_tables(table_names, _overwrite=_overwrite)
 
 
 class FantasyApi():
@@ -23,9 +16,15 @@ class FantasyApi():
         # Create a record in a table
         pass
 
-    def read(self):
+    def read(self, table_name):
         # Retrieve [information requested from ORM]
-        pass
+        if fantasy_db.table_exists(self.db_conn, table_name):
+            table_data = fantasy_db.get_table_data(self.db_conn, table_name)
+            return table_data
+        else:
+            # table_data = None
+            raise ValueError(f'Table {table_name} not found.')
+
 
     def update(self):
         # Update a table record
@@ -122,27 +121,4 @@ class FantasyApi():
 
 if __name__ == '__main__':
     pass
-    # t0 = time.time()
-    # num_weeks = 18
-    #
-    # db = 'fantasy.db'
-    # api = FantasyApi(db)
-    #
-    # table_names = ['league', 'roster', 'rostered_player', 'user', 'nfl_state',
-    #                'draft_info', 'draft_order', 'draft_pick', 'league_transaction']
-
-    # table_names = ['roster_week', 'player_week']
-    # table_names = ['player']
-
-    # api.update_tables(table_names, _overwrite=True)
-    #
-    # t1 = time.time()
-    # print(t1-t0, f" seconds to update tables {repr([i for i in table_names])}.")
-
-    # i = 0
-    # table_column_names = fantasy_db.get_table_column_names(api.conn, table_names[i])
-    # table_data_list = api.get_tables(table_names)
-
-    # [print(i) for i in table_data_list[i]]
-    # print(table_column_names)
 
