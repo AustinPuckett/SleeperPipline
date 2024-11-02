@@ -1,5 +1,6 @@
 import pipeline.fantasy_db as fantasy_db
 import pipeline.transform as transform
+import pipeline.extract as extract
 import time
 
 def update_all_tables(api, _overwrite=True):
@@ -12,10 +13,43 @@ def update_all_tables(api, _overwrite=True):
 class FantasyApi():
     def __init__(self, auth):
         # Find database provided by auth
-        auth = {'key': 'True'}
-        db = 'sample.db'
-        if auth['key'] == 'True':
+        # TODO: Replace dummys
+        auth = {'key': 'True'} # Dummy auth
+        db = 'sample.db' # Dummy db
+        if auth['key'] == 'True': # if provided auth_key matches saved auth_key, permit access
             self.db_conn = fantasy_db.create_connection(db)
+
+    def create(self):
+        # Create a record in a table
+        pass
+
+    def read(self):
+        # Retrieve [information requested from ORM]
+        pass
+
+    def update(self):
+        # Update a table record
+        pass
+
+    def delete(self):
+        # Delete a table record
+        pass
+
+    def load_sleeper_tables(self, sleeper_api_params, year, include_player_data=True):
+        '''Run the sleeper ETL and override existing data sourced from sleeper.
+        :return:
+        '''
+
+        table_names = ['league', 'roster', 'rostered_player', 'user', 'roster_week', 'player_week',
+                       'league_transaction', 'nfl_state', 'draft_info', 'draft_pick', 'draft_order', 'player']
+
+        json_dict = extract.extract_all(api_params=sleeper_api_params, include_player_data=include_player_data)
+
+        table_entries_dict = transform.transform_many(table_names, json_dict, year)
+
+        # self = load.FantasyApi(db_conn)
+        self.update_tables(table_entries_dict, _overwrite=False)
+
 
     def update_tables(self, table_entries_dict, _overwrite=False):
         '''

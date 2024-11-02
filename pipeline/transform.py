@@ -2,7 +2,6 @@ import json, os
 import numpy as np
 
 
-# General Functions
 def get_json_data_from_file(filename,
                             directory):
     '''
@@ -17,6 +16,7 @@ def get_json_data_from_file(filename,
     with open(filepath, "r") as readfile:
         json_data = json.load(readfile)
     return json_data
+
 
 def transform_first_layer(json_data):
     '''
@@ -41,6 +41,7 @@ def transform_first_layer(json_data):
 
     return data_dict
 
+
 def has_depth(object):
     '''
     This function determine whether or not an object is a list, tuple, or dictionary
@@ -57,6 +58,7 @@ def has_depth(object):
         except:
             return object != None
 
+
 def set_uniqueness(listA, listB):
     '''
     This function return all elements of listA that do not appear in listB.
@@ -72,6 +74,7 @@ def set_uniqueness(listA, listB):
 
     return unique_elements
 
+
 def dict_to_list(dict_or_list):
     '''
     This function converts a non index-able object to a list
@@ -84,6 +87,7 @@ def dict_to_list(dict_or_list):
         return dict_or_list
     except:
         return [dict_or_list]
+
 
 def get_json_keys(table_entries):
     '''
@@ -101,6 +105,7 @@ def get_json_keys(table_entries):
         keys = keys + entry_keys
     keys = np.unique(keys)
     return keys
+
 
 def convert_dict_to_table_row(entry_dict, table_column_names):
     '''
@@ -224,6 +229,7 @@ def transform_users(json_data, year):
 
     return dict_to_list(table_entries)
 
+
 # roster_week
 def transform_roster_weeks(json_data, week, year):
     '''
@@ -247,6 +253,7 @@ def transform_roster_weeks(json_data, week, year):
         roster_week_entry_list.append(roster_dict)
 
     return dict_to_list(roster_week_entry_list)
+
 
 # player_week
 def transform_player_week(json_data, week, year):
@@ -288,6 +295,7 @@ def transform_player_week(json_data, week, year):
 
     return dict_to_list(player_week_entry_list)
 
+
 # league_transaction
 def transform_transactions(json_data, year):
     '''
@@ -323,6 +331,7 @@ def transform_nfl_state(json_data, year):
 
     return dict_to_list(entry_dict)
 
+
 # draft_info
 def transform_draft_info(json_data, year):
     '''
@@ -337,6 +346,7 @@ def transform_draft_info(json_data, year):
     entry_dict['year'] = year
 
     return dict_to_list(entry_dict)
+
 
 # draft_order
 def transform_draft_order(json_data, year):
@@ -358,6 +368,7 @@ def transform_draft_order(json_data, year):
 
     return dict_to_list(draft_order_entries)
 
+
 # draft_pick
 def transform_draft_picks(json_data, year):
     '''
@@ -374,6 +385,7 @@ def transform_draft_picks(json_data, year):
         table_entries.append(entry_dict)
 
     return dict_to_list(table_entries)
+
 
 # player
 def transform_player_data(json_data, year):
