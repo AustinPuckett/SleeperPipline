@@ -113,7 +113,7 @@ def convert_dict_to_table_row(entry_dict, table_column_names):
     
     TODO: This algorith may be terribly ineffecient.
 
-    :param data_dict:
+    :param entry_dict:
     :param table_column_names:
     :return row_vals: List of values to be entered into a database table row
     '''

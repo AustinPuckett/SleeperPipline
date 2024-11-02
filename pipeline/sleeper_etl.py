@@ -1,6 +1,6 @@
 import pipeline.extract as extract
 import pipeline.transform as transform
-import pipeline.load as load
+import pipeline.api as load
 import time
 
 

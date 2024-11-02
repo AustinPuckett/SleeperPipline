@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-from pipeline.load import FantasyApi
+from pipeline.api import FantasyApi
 from matplotlib import pyplot as plt
 from matplotlib.patches import Circle
 import matplotlib.colors as mcolors

@@ -48,7 +48,7 @@ class FantasyApi():
         table_entries_dict = transform.transform_many(table_names, json_dict, year)
 
         # self = load.FantasyApi(db_conn)
-        self.update_tables(table_entries_dict, _overwrite=False)
+        self.update_tables(table_entries_dict, _overwrite=True)
 
 
     def update_tables(self, table_entries_dict, _overwrite=False):
@@ -64,7 +64,6 @@ class FantasyApi():
         # Extract
         for table_name in table_entries_dict:
             table_entries = table_entries_dict[table_name]
-            t0 = time.time()
             if fantasy_db.table_exists(self.db_conn, table_name):
                 if _overwrite:
                     table_fields = transform.get_json_keys(table_entries)
@@ -77,8 +76,6 @@ class FantasyApi():
                 table_fields = transform.get_json_keys(table_entries)
                 fantasy_db.create_table(self.db_conn, table_name, table_fields)
                 self.db_conn.commit()
-            t1 = time.time()
-            print(t1 - t0, f" seconds to create table {table_name}.")
 
             # Insert table_entries into table
             table_entries = transform.dict_to_list(table_entries)
@@ -87,8 +84,6 @@ class FantasyApi():
                 fantasy_db.create_table_row(self.db_conn, table_name, row_vals)
 
             self.db_conn.commit()
-            t2 = time.time()
-            print(t2 - t1, f" seconds to create table entries for {table_name}.")
 
     def get_tables(self, table_names=[]):
         '''
