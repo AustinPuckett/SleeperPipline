@@ -91,7 +91,7 @@ class SeasonModel():
         return season_info
 
     def load_season_data(self):
-        api_params = {'league_id': int(self.league_id), 'draft_id': int(self.draft_id), 'week': 1}
-        standard_queries.load_season_data(self.db_conn, api_params, int(self.year))
+        api_params = {'league_id': int(self.league_id), 'draft_id': int(self.draft_id), 'week': None}
+        api.load_sleeper_tables(api_params, int(self.year), include_player_data=False)
 
 
