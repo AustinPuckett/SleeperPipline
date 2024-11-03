@@ -18,7 +18,7 @@ class AppController(tk.Tk):
 
         self.container.grid(row=0, column=0, padx=2, pady=2, ipadx=0, ipady=0, sticky='N')
 
-        self.api
+        self.api = None
 
         self.views = {LoginView: {'model': AccountModel, 'presenter': LoginPresenter},
                       CreateAccountView: {'model': AccountModel, 'presenter': CreateAccountPresenter},

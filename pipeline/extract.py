@@ -143,6 +143,7 @@ def get_player_data():
     r = requests.get(url, timeout=LONG_TIMEOUT)
     json_data = r.json()
 
+    print(json_data)
     return json_data
 
 

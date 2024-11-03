@@ -13,7 +13,7 @@ class AccountModel():
         self.api = api.FantasyApi()
         self.username = None
         self.league_id = None
-        self.draft_ids = None
+        # self.draft_ids = None
 
     def validate_login(self, username):
         # TODO: update login validation to require more than username
@@ -23,7 +23,7 @@ class AccountModel():
         login_response = self.api.login(auth)
         if login_response['valid_login'] == True:
             self.league_id = login_response['league_id']
-            self.draft_ids = login_response['draft_ids']
+            # self.draft_ids = login_response['draft_ids']
         else:
             # TODO: Raise Error?
             pass
@@ -92,6 +92,6 @@ class SeasonModel():
 
     def load_season_data(self):
         api_params = {'league_id': int(self.league_id), 'draft_id': int(self.draft_id), 'week': None}
-        api.load_sleeper_tables(api_params, int(self.year), include_player_data=False)
+        self.api.load_sleeper_tables(api_params, int(self.year), include_player_data=True)
 
 

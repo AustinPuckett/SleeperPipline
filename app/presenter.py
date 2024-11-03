@@ -12,12 +12,14 @@ class LoginPresenter():
         username = self.view.username_entry.get()
         # password = self.view.bar.get()
         login_response = self.model.validate_login(username)
-        if login_response['success'] == True:
+        if (login_response['valid_login'] == True) and (login_response['league_id'] != ''):
             refresh_data = self.view.data_refresh_var.get()
             if refresh_data:
                 self.model.refresh_sleeper_data()
 
             self.master.change_view(StartView)
+        elif (login_response['valid_login'] == True) and (login_response['league_id'] == ''):
+            self.master.change_view(SeasonView)
         else:
             # trigger the view.error method and show the login response
             print(login_response['message']) # TODO: Present Error View

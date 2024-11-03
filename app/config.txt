@@ -10,3 +10,6 @@
 {"username": "Jerm", "database": "Jerm.db", "directory": "C:\\Users\\pucke\\PycharmProjects\\SleeperPipeline\\app"}
 {"username": "Week 10", "database": "Week 10.db", "directory": "C:\\Users\\pucke\\PycharmProjects\\SleeperPipeline\\app"}
 {"username": "week 11", "database": "week 11.db", "directory": "C:\\Users\\pucke\\PycharmProjects\\SleeperPipeline\\app"}
+{"username": "Test1", "database": "Test1.db", "directory": "C:\\Users\\pucke\\PycharmProjects\\SleeperPipeline\\app"}
+{"username": "Test2", "database": "Test2.db", "directory": "C:\\Users\\pucke\\PycharmProjects\\SleeperPipeline\\app", "league_id": ""}
+{"username": "Test3", "database": "Test3.db", "directory": "C:\\Users\\pucke\\PycharmProjects\\SleeperPipeline\\app", "league_id": ""}

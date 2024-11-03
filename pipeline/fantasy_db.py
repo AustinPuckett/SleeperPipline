@@ -112,11 +112,11 @@ def get_table_data(conn, table_name):
 
 
 def create_db(db_file_name):
-    conn = sql.connect(db_file_name)
+    conn = sqlite3.connect(db_file_name)
     conn.close()
 
 def connect_to_db(db_file_name):
-    return sql.connect(db_file_name)
+    return sqlite3.connect(db_file_name)
 
 
 if __name__ ==  '__main__':

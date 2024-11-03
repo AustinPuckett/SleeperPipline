@@ -5,7 +5,7 @@ import json, os
 
 
 class FantasyApi():
-    def __init__(self, auth):
+    def __init__(self):
         self.db_conn = None
         self.root_path = os.path.join(os.getcwd(), 'app')
         self.config_file_name = 'config.txt'
@@ -61,12 +61,17 @@ class FantasyApi():
                     database = account_info['database']
                     league_id = account_info[
                         'league_id']  # Replace with call to database for league_id associated with username
-                    draft_ids = account_info[
-                        'draft_ids']  # Replace with call to database for draft_ids assoc. with username
+                    # draft_ids = account_info[
+                    #     'draft_ids']  # Replace with call to database for draft_ids assoc. with username
+
+
 
         if valid_login:
             self.db_conn = fantasy_db.create_connection(database)
-            response = {'valid_login': True, 'username': username, 'league_id': league_id, 'draft_ids': draft_ids}
+            if league_id == '':
+                response = {'valid_login': True, 'username': username, 'league_id': league_id}
+            else:
+                response = {'valid_login': True, 'username': username, 'league_id': league_id}
         else:
             response = {'valid_login': False}
 
@@ -78,7 +83,8 @@ class FantasyApi():
         '''
 
         table_names = ['league', 'roster', 'rostered_player', 'user', 'roster_week', 'player_week',
-                       'league_transaction', 'nfl_state', 'draft_info', 'draft_pick', 'draft_order', 'player']
+                       'nfl_state', 'draft_info', 'draft_pick', 'draft_order', 'player']
+        # 'league_transaction'
 
         json_dict = extract.extract_all(api_params=sleeper_api_params, include_player_data=include_player_data)
 
@@ -149,7 +155,7 @@ class FantasyApi():
 
         if self.validate_account_creation(username, database):
             fantasy_db.create_db(database)
-            fantasy_db.create_connection(database)
+            self.db_conn = fantasy_db.create_connection(database)
             full_database_path = os.path.join(self.root_path, database)
 
             # Instantiate Database
@@ -158,7 +164,7 @@ class FantasyApi():
             # Create config file entry
             with open(self.config_file_name_path, 'a') as config_file:
                 entry_dict = {"username": username, "database": database,
-                              "directory": self.root_path}
+                              "directory": self.root_path, 'league_id': ''}
                 config_file.write(json.dumps(entry_dict) + '\n')
                 print('written kitten', entry_dict)
         else:
