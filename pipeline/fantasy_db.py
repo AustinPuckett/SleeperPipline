@@ -111,6 +111,14 @@ def get_table_data(conn, table_name):
     return table_data
 
 
+def create_db(db_file_name):
+    conn = sql.connect(db_file_name)
+    conn.close()
+
+def connect_to_db(db_file_name):
+    return sql.connect(db_file_name)
+
+
 if __name__ ==  '__main__':
     # Refresh Tables
     db_file = 'fantasy.db'

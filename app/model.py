@@ -2,106 +2,54 @@ import os
 import json
 import sqlite3 as sql
 import analysis.standard_queries as standard_queries
-import pipeline.sleeper_etl as sleeper_etl
+import pipeline.api as api
 
 class AccountModel():
     '''TODO: Change working directory once this program is converted to a .exe'''
 
     def __init__(self):
-        self.root_path = os.path.join(os.getcwd(), 'app')
-        print(self.root_path)
-        self.config_file_name = 'config.txt'
-        self.config_file_name_path = os.path.join(self.root_path, self.config_file_name)
-        self.download_file_path = None
-        self.db_conn = None
+
+        self.api = api.FantasyApi()
         self.username = None
         self.league_id = None
         self.draft_ids = None
 
-        # Check if config file exists
-        config_exists = False
-        for file in os.listdir(self.root_path):
-            if file == self.config_file_name:
-                config_exists = True
-        if config_exists == False:
-            with open(self.config_file_name_path, 'w') as config_file:
-                print('Successfully created config file.')
 
-        # Check if config file is empty or corrupted
-        config_empty = True
-        config_corrupted = False
-        with open(self.config_file_name_path, 'r') as config_file:
-            pass
 
     def validate_login(self, username):
-        login_response = {'success': False, 'message': None}
-        with open(self.config_file_name_path, 'r') as config_file:
-            for row in config_file:
-                account_info = json.loads(row)
-                if username == account_info['username']:
-                    database = account_info['database']
-                    self.db_conn = standard_queries.connect_to_db(database)
-                    self.username = username
-                    # self.league_id = account_info['league_id']
-                    # self.draft_ids = account_info['draft_ids']
-                    login_response['success'] = True
-                    return login_response
+        #TODO: update login validation to require more than username
+        # login_response = {'success': False, 'message': None}
 
-        login_response['message'] = 'There was an unexpected error. Check the configuration file to see if the ' \
-                                    'username exists.'
+        auth = {'username': username}
+        login_response = self.api.login(auth)
+        if login_response['valid_login'] == True:
+            self.league_id = login_response['league_id']
+            self.draft_ids = login_response['draft_ids']
+        else:
+            # TODO: Raise Error?
+            pass
+
         return login_response
 
-    def get_usernames(self):
-        '''Access the entries in the configuration file.'''
-        account_list = []
-        with open(self.config_file_name_path, 'r') as config_file:
-            for row in config_file:
-                account_list.append(json.loads(row))
-
-        usernames = [account['username'] for account in account_list]
-
-        return usernames
 
     def get_user_count(self):
+        # Retrieve the total number of users
+        # TODO: Program
         return 1
 
     def create_account(self, username):
         '''Trigger the instantiation of a new database and create an account entry in the configuration file.'''
 
-        db_file_name = username + '.db'
-        if self.validate_file_name(db_file_name):
-            standard_queries.create_db(db_file_name)
-            self.db_conn = standard_queries.connect_to_db(db_file_name)
-            full_database_path = os.path.join(self.root_path, db_file_name)
+        auth = {'username': username}
 
-            # Instantiate Database
-            # self.instantiate_database_schema(db_file_name)
-            # self.instantiate_static_tables(db_file_name)
-            self.instantiate_dynamic_tables()
+        self.api.create_account(auth)
 
-            # Create config file entry
-            with open(self.config_file_name_path, 'a') as config_file:
-                entry_dict = {"username": username, "database": db_file_name,
-                              "directory": self.root_path}
-                config_file.write(json.dumps(entry_dict) + '\n')
-                print('written kitten', entry_dict)
-        else:
-            # TODO: Return an error
-            pass
-
-    def validate_file_name(self, file_name):
-        return True
-
-    def instantiate_database_schema(self, league_id, year, week=4):
-        # api_params = {'league_id': league_id, 'draft_id': '983048181460119553', 'week': 4} # TODO: pass week as param
-        api_params = {'league_id': league_id, 'draft_id': '983048181460119553', 'week': week}
-        sleeper_etl.run_sleeper_etl(self.db_conn, api_params, year)
-
-    def instantiate_static_tables(self, db_conn):
-        pass
-
-    def instantiate_dynamic_tables(self):
-        standard_queries.create_season_table(self.db_conn)
+    def refresh_sleeper_data(self, include_player_data=True):
+        # TODO: Eliminate refresh of draft_id unless specified
+        self.api.load_sleeper_tables(sleeper_api_params={'league_id': self.league_id,
+                                                        'draft_id': self.draft_ids[0],},
+                                     year=2024,
+                                     include_player_data=True)
 
 
 class StartModel():

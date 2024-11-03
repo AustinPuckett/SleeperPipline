@@ -14,14 +14,14 @@ class LoginPresenter():
         login_response = self.model.validate_login(username)
         if login_response['success'] == True:
             refresh_data = self.view.data_refresh_var.get()
-            # if refresh_data:
-            #     self.model.instantiate_database_schema(self.model.db_conn, self.model.league_id)
-            #     self.model.instantiate_static_tables(self.model.db_conn)
-            #       self.model.instantiate_dynamic_tables(self.model.db_conn)
+            if refresh_data:
+                self.model.refresh_sleeper_data()
+
             self.master.change_view(StartView)
         else:
             # trigger the view.error method and show the login response
-            print(login_response['message'])
+            print(login_response['message']) # TODO: Present Error View
+            # self.master.error_window(error_message)
 
     def show_create_account_view(self, event):
         self.master.change_view(CreateAccountView)
@@ -31,7 +31,7 @@ class LoginPresenter():
             self.master.change_view(CreateAccountView)
         else:
             self.view.init_ui(self)
-            self.view.username_entry.config(values=self.model.get_usernames())
+            # self.view.username_entry.config(values=self.model.get_usernames())
             self.view.grid()
 
     def exit_view(self):

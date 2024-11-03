@@ -1,16 +1,56 @@
 import pipeline.fantasy_db as fantasy_db
 import pipeline.transform as transform
 import pipeline.extract as extract
+import json, os
 
 
 class FantasyApi():
     def __init__(self, auth):
-        # Find database provided by auth
-        # TODO: Replace dummys
-        auth = {'key': 'True'} # Dummy auth
-        db = 'sample.db' # Dummy db
-        if auth['key'] == 'True': # if provided auth_key matches saved auth_key, permit access
-            self.db_conn = fantasy_db.create_connection(db)
+        self.db_conn = None
+        self.root_path = os.path.join(os.getcwd(), 'app')
+        self.config_file_name = 'config.txt'
+        self.config_file_name_path = os.path.join(self.root_path, self.config_file_name)
+        self.download_file_path = None
+
+        # Check if config file exists TODO: Move to api
+        config_exists = False
+        for file in os.listdir(self.root_path):
+            if file == self.config_file_name:
+                config_exists = True
+        if config_exists == False:
+            with open(self.config_file_name_path, 'w') as config_file:
+                print('Successfully created config file.')
+
+        # Check if config file is empty or corrupted
+        config_empty = True
+        config_corrupted = False
+        with open(self.config_file_name_path, 'r') as config_file:
+            pass
+
+    def login(self, auth):
+        # Connect to user's database
+        # TODO: Move login file to database
+        username = auth['username']
+
+        with open(self.config_file_name_path, 'r') as config_file:
+            for row in config_file:
+                account_info = json.loads(row)
+                if username == account_info['username']:
+                    valid_login = True
+                    database = account_info['database']
+                    league_id = account_info[
+                        'league_id']  # Replace with call to database for league_id associated with username
+                    draft_ids = account_info[
+                        'draft_ids']  # Replace with call to database for draft_ids assoc. with username
+
+        if valid_login:
+            self.db_conn = fantasy_db.create_connection(database)
+            response = {'valid_login': True, 'username': username, 'league_id': league_id, 'draft_ids': draft_ids}
+        else:
+            response = {'valid_login': False}
+
+        return response
+
 
     def create(self):
         # Create a record in a table
@@ -48,7 +88,6 @@ class FantasyApi():
 
         # self = load.FantasyApi(db_conn)
         self.update_tables(table_entries_dict, _overwrite=True)
-
 
     def update_tables(self, table_entries_dict, _overwrite=False):
         '''
@@ -103,6 +142,41 @@ class FantasyApi():
             table_data_list.append(table_data)
 
         return table_data_list
+
+    def create_account(self, auth):
+        '''Trigger the instantiation of a new database and create an account entry in the configuration file.'''
+
+        username = auth['username']
+        database = username + '.db'
+
+        if self.validate_account_creation(username, database):
+            fantasy_db.create_db(database)
+            fantasy_db.create_connection(database)
+            full_database_path = os.path.join(self.root_path, database)
+
+            # Instantiate Database
+            self.instantiate_dynamic_tables()
+
+            # Create config file entry
+            with open(self.config_file_name_path, 'a') as config_file:
+                entry_dict = {"username": username, "database": database,
+                              "directory": self.root_path}
+                config_file.write(json.dumps(entry_dict) + '\n')
+                print('written kitten', entry_dict)
+        else:
+            # TODO: Return an error
+            pass
+
+    def validate_account_creation(self, username, file_name):
+        return True
+
+    def instantiate_dynamic_tables(self):
+        table_name = 'season'
+        table_fields = ['year', 'league_id', 'draft_id']
+
+        if not fantasy_db.table_exists(self.db_conn, table_name):
+            fantasy_db.create_table(self.db_conn, table_name, table_fields)
+            self.db_conn.commit()
 
     def _create_table(self, table_name, table_fields=None):
         # if table_entries != None:

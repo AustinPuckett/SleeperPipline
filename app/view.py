@@ -31,7 +31,7 @@ class LoginView(tk.Frame):
         # Instantiate widgets
         self.title_text = ttk.Label(self, text='Login', font=title_font)
         # self.login_label = ttk.Label(self, text='Login', font=label_font)
-        self.username_entry = ttk.Combobox(self, font=entry_font, width=15)
+        self.username_entry = ttk.Entry(self, font=entry_font, width=15)
         self.username_entry_text = ttk.Label(self, text='Username:', font=label_font)
 
         self.data_refresh_var = tk.IntVar()

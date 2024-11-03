@@ -18,6 +18,8 @@ class AppController(tk.Tk):
 
         self.container.grid(row=0, column=0, padx=2, pady=2, ipadx=0, ipady=0, sticky='N')
 
+        self.api
+
         self.views = {LoginView: {'model': AccountModel, 'presenter': LoginPresenter},
                       CreateAccountView: {'model': AccountModel, 'presenter': CreateAccountPresenter},
                       StartView: {'model': StartModel, 'presenter': StartPresenter},
@@ -53,7 +55,7 @@ class AppController(tk.Tk):
             self.active_model = model()
         else:
             self.add_menu()
-            self.active_model = model(self.account_model.db_conn)
+            self.active_model = model(self.account_model.api)
 
         self.geometry('') # Reset root window geometry
 
