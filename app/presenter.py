@@ -69,7 +69,7 @@ class StartPresenter():
     def render_graph(self, event):
         visual_selection = self.view.visual_selection.get()
         week = int(self.view.week_selection.get())
-        year = 2023
+        year = 2024 # TODO: Make dynamic
 
         if visual_selection == 'Schedule Luck':
             luck_factor_df = self.model.get_luck_factor_df(week, year)

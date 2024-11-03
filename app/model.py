@@ -4,6 +4,7 @@ import sqlite3 as sql
 import analysis.standard_queries as standard_queries
 import pipeline.api as api
 
+
 class AccountModel():
     '''TODO: Change working directory once this program is converted to a .exe'''
 
@@ -14,10 +15,8 @@ class AccountModel():
         self.league_id = None
         self.draft_ids = None
 
-
-
     def validate_login(self, username):
-        #TODO: update login validation to require more than username
+        # TODO: update login validation to require more than username
         # login_response = {'success': False, 'message': None}
 
         auth = {'username': username}
@@ -30,7 +29,6 @@ class AccountModel():
             pass
 
         return login_response
-
 
     def get_user_count(self):
         # Retrieve the total number of users
@@ -53,39 +51,28 @@ class AccountModel():
 
 
 class StartModel():
-    def __init__(self, db_conn):
+    def __init__(self, api):
         ...
-        self.db_conn = db_conn
+        self.api = api
         self.visuals = ['Schedule Luck', 'Roster Week Points']
         self.eval_week = self.get_week()
 
     def get_luck_factor_df(self, week, year):
-        df = standard_queries.get_luck_factor_df(self.db_conn, week, year)
+        df = standard_queries.get_luck_factor_df(self.api.db_conn, week, year)
         return df
 
     def get_roster_week_points_df(self, week, year):
-        df = standard_queries.get_roster_week_points_df(self.db_conn, week, year)
+        df = standard_queries.get_roster_week_points_df(self.api.db_conn, week, year)
         return df
 
     def get_week(self):
         return 4
 
-    def instantiate_database_schema(self, league_id, year, week=4):
-        # api_params = {'league_id': league_id, 'draft_id': '983048181460119553', 'week': 4} # TODO: pass week as param
-        api_params = {'league_id': league_id, 'draft_id': '983048181460119553', 'week': week}
-        sleeper_etl.run_sleeper_etl(self.db_conn, api_params, year)
-
-    def instantiate_static_tables(self, db_conn):
-        pass
-
-    def instantiate_dynamic_tables(self, db_conn):
-        standard_queries.create_season_table(self.db_conn)
-
 
 class SeasonModel():
-    def __init__(self, db_conn):
+    def __init__(self, api):
         ...
-        self.db_conn = db_conn
+        self.api = api
         self.league_id = None
         self.draft_id = None
         self.year = None
@@ -93,14 +80,14 @@ class SeasonModel():
     def get(self, year):
         self.year = year
 
-        season_info = standard_queries.get_season(self.db_conn, year)
+        season_info = standard_queries.get_season(self.api.db_conn, year)
         return season_info
 
     def create(self):
-        standard_queries.create_season(self.db_conn, self.year, self.league_id, self.draft_id)
+        standard_queries.create_season(self.api.db_conn, self.year, self.league_id, self.draft_id)
 
     def get_all(self):
-        season_info = standard_queries.get_all_seasons(self.db_conn)
+        season_info = standard_queries.get_all_seasons(self.api.db_conn)
         return season_info
 
     def load_season_data(self):

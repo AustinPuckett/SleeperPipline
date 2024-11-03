@@ -27,6 +27,27 @@ class FantasyApi():
         with open(self.config_file_name_path, 'r') as config_file:
             pass
 
+    def create(self):
+        # Create a record in a table
+        pass
+
+    def read(self, table_name):
+        # Retrieve [information requested from ORM]
+        if fantasy_db.table_exists(self.db_conn, table_name):
+            table_data = fantasy_db.get_table_data(self.db_conn, table_name)
+            return table_data
+        else:
+            # table_data = None
+            raise ValueError(f'Table {table_name} not found.')
+
+    def update(self):
+        # Update a table record
+        pass
+
+    def delete(self):
+        # Delete a table record
+        pass
+
     def login(self, auth):
         # Connect to user's database
         # TODO: Move login file to database
@@ -50,29 +71,6 @@ class FantasyApi():
             response = {'valid_login': False}
 
         return response
-
-
-    def create(self):
-        # Create a record in a table
-        pass
-
-    def read(self, table_name):
-        # Retrieve [information requested from ORM]
-        if fantasy_db.table_exists(self.db_conn, table_name):
-            table_data = fantasy_db.get_table_data(self.db_conn, table_name)
-            return table_data
-        else:
-            # table_data = None
-            raise ValueError(f'Table {table_name} not found.')
-
-
-    def update(self):
-        # Update a table record
-        pass
-
-    def delete(self):
-        # Delete a table record
-        pass
 
     def load_sleeper_tables(self, sleeper_api_params, year, include_player_data=True):
         '''Run the sleeper ETL and override existing data sourced from sleeper.
